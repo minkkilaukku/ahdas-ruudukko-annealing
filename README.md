@@ -5,3 +5,5 @@ The file simAnneal.js contains the algorithm that takes a class as parameter (th
 
 
 The class Grid repserents the way we try to put all numbers into it. Its parameters (what NUMS to put and grid size MxN are static class variables).
+
+Page index.html and main.js has a little interface for testing and viewing how the current state looks.
