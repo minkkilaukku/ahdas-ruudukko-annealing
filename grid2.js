@@ -307,6 +307,7 @@ Grid.cleanNums = luvut => {
 
 /** Set squares upto k^2 */
 Grid.setParams = (k) => {
+    Grid.K_UPTO = k;
     Grid.NUMS = Grid.cleanNums(new Array(k).fill(null).map((_,i)=>(i+1)**2).reverse());
     Grid.NUMS_S = Grid.NUMS.map(num=>num.toString());
 };

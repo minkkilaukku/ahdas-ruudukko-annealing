@@ -1,5 +1,5 @@
-let stopOnCells = 4*5; //amount of cells that's accepted as a optimal solution
-Grid.setParams(20);
+let stopOnCells = 10*15; //amount of cells that's accepted as a optimal solution
+Grid.setParams(100);
 Grid.CANVAS_CELL_W = 20;
 Grid.CANVAS_CELL_H = 20;
 
@@ -27,11 +27,16 @@ view.update = function() {
 };
 
 const infoText = document.createElement("p");
+infoText.classList.add("infoText");
 infoText.update = () => {
-    infoText.innerHTML = ("Iteration: "+sa.iteration
-                        +"<br/>Moves: "+sa.moves
-                          +"<br/>T: "+sa.T
-                         +"<br/>Energy: "+sa.prevE);
+    infoText.innerHTML = (
+        `<span class="kUptoText">Squares upto: ${Grid.K_UPTO}</span>`
+        +"<br/>Iteration: "+sa.iteration
+        +"<br/>Moves: "+sa.moves
+        +"<br/>T: "+sa.T
+        +"<br/>Grid: "+sa.el.m+"x"+sa.el.n+" = "+(sa.el.m*sa.el.n)
+        +"<br/>Energy: "+sa.prevE
+    );
 };
 infoText.update();
 document.body.appendChild(infoText);

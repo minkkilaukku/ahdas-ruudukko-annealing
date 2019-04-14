@@ -140,6 +140,7 @@ Grid.cleanNums = luvut => {
 Grid.setParams = (m, n, k) => {
     Grid.M = m;
     Grid.N = n;
+    Grid.K_UPTO = k;
     Grid.NUMS = Grid.cleanNums(new Array(k).fill(null).map((_,i)=>(i+1)**2).reverse());
 };
 
