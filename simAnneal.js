@@ -4,6 +4,7 @@ class SimAnneal {
         this.el = elClass.makeRand();
         this.prevE = this.el.getEnergy();
         this.T = elClass.getStartT();
+        this.reduceFactor = 0.99;
         this.iteration = 0;
         this.moves = 0;
         this.stopCond = null;
@@ -11,7 +12,7 @@ class SimAnneal {
     }
     
     reduceT() {
-        this.T *= 0.95;
+        this.T *= this.reduceFactor;
     }
     
     step() {

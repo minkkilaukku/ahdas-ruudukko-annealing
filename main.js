@@ -1,5 +1,5 @@
-let stopOnCells = 10*15; //amount of cells that's accepted as a optimal solution
-Grid.setParams(100);
+
+Grid.setParams(10,15,100);
 Grid.CANVAS_CELL_W = 20;
 Grid.CANVAS_CELL_H = 20;
 
@@ -8,7 +8,7 @@ let stepsPerTick = 10;
 
 const sa = new SimAnneal(Grid);
 sa.stopCond = function() {
-    return this.el.m*this.el.n <= stopOnCells;
+    return this.el.m*this.el.n <= this.el.wantM*this.el.wantN;
 };
 sa.onStop = () => {
     if (contAnneal) {

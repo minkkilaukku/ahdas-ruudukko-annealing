@@ -1,8 +1,13 @@
 
 class Grid {
+    /** Make grid with starting size mxn.
+    * The given dimensions will also be set as the wanted ones
+    */
     constructor(m, n) {
         this.m = m;
         this.n = n;
+        this.wantM = m;
+        this.wantN = n;
         this.placing = {};
         this.board = this.makeBoard();
     }
@@ -181,7 +186,6 @@ class Grid {
     
     
     takeRandStep() {
-        
         const num = Grid.NUMS_S[randInt(0, Grid.NUMS.length-1)];
         const {place, dir} = Grid.getRandPlacing(num, this.m, this.n);
         const prev = this.placing[num];
@@ -231,7 +235,45 @@ class Grid {
         return a;
     }
     
+    
+    countAverageFill() {
+        let s = 0; // = Grid.NUMS_S.reduce((cumu, x)=>cumu+x.length, 0);
+        for (let i=0; i<this.m; i++) {
+            for (let j=0; j<this.n; j++) {
+                s += this.board[i][j].length;
+            }
+        }
+        return s/(this.m*this.n);
+    }
+    
+    countCompactness() {
+        let s = 0;
+        for (let i=0; i<this.m; i++) {
+            for (let j=0; j<this.n; j++) {
+                s += (this.m-i)*(this.n-j)*this.board[i][j].length;
+            }
+        }
+        return 4*s/(this.m*(this.m+1)*this.n*(this.n+1));
+    }
+    
+    countOverFill() {
+        let s = 0;
+        for (let i=this.wantM; i<this.m; i++) {
+            for (let j=0; j<this.n; j++) {
+                s += i*this.board[i][j].length**2;
+            }
+        }
+        for (let i=0; i<this.wantM; i++) {
+            for (let j=this.wantN; j<this.n; j++) {
+                s += j*this.board[i][j].length**2;
+            }
+        }
+        return s;
+    }
+    
     getEnergy() {
+        return this.countOverFill();
+        /*
         const a = this.board;
         let s1 = 0;
         const lastJ = this.n-1;
@@ -243,7 +285,13 @@ class Grid {
         for (let j=0; j<this.n; j++) {
             s2 += a[lastI][j].length;
         }
-        return  this.m*this.n + 0.23*(s1*this.m + s2*this.n); //TODO what formula to use?
+        //TODO what formula to use?
+        let ret = 0;
+        ret += this.m*this.n;
+        ret +=  9.93*(s1 + s2);
+        ret += 20/(1+2*this.countCompactness());
+        return ret;
+        */
     }
     
     toString() {
@@ -305,14 +353,16 @@ Grid.cleanNums = luvut => {
     return pal;
 };
 
-/** Set squares upto k^2 */
-Grid.setParams = (k) => {
+/** Set squares upto k^2  and the wanted solution size mxn */
+Grid.setParams = (m,n,k) => {
     Grid.K_UPTO = k;
     Grid.NUMS = Grid.cleanNums(new Array(k).fill(null).map((_,i)=>(i+1)**2).reverse());
     Grid.NUMS_S = Grid.NUMS.map(num=>num.toString());
+    Grid.M = m;
+    Grid.N = n;
 };
 
-Grid.setParams(20);
+Grid.setParams(4,5,20);
 
 Grid.DIRS = [ [-1,-1], [-1, 0], [-1, 1], [0, -1], [0, 1], [1,-1], [1, 0], [1, 1] ];
 Grid.DIRS_0 = [ [-1, 0], [1, 0] ];
@@ -337,7 +387,7 @@ Grid.getRandPlacing = (num, m, n) => {
 };
 
 Grid.makeRand = () => {
-    const r = new Grid(0, 0);
+    const r = new Grid(Grid.M, Grid.N);
     for (let num of Grid.NUMS.slice(0).sort(()=>Math.random()-0.5)) {
         let {place, dir} = r.findFreePlacing(num);
         r.setNum(num, place, dir);
