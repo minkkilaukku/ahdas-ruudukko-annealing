@@ -186,7 +186,9 @@ class Grid {
     
     
     takeRandStep() {
-        const num = Grid.NUMS_S[randInt(0, Grid.NUMS.length-1)];
+        //const num = Grid.NUMS_S[randInt(0, Grid.NUMS.length-1)];
+        const bordNums = this.getBorderNums();
+        const num = bordNums[randInt(0, bordNums.length-1)];
         const {place, dir} = Grid.getRandPlacing(num, this.m, this.n);
         const prev = this.placing[num];
         const numS = num.toString();
@@ -213,6 +215,20 @@ class Grid {
         },
             onAccept: ()=>{}
         };
+    }
+    
+    
+    getBorderNums() {
+        const bordI = this.m-1;
+        const bordJ = this.n-1;
+        return Object.keys(this.placing).filter(num=>{
+            const w = num.length-1;
+            const [i, j] = this.placing[num].place;
+            const [di, dj] = this.placing[num].dir;
+            const endI = i+w*di;
+            const endJ = j+w*dj;
+            return i===bordI || endI===bordI || j===bordJ || endJ===bordJ;
+        });
     }
     
     
