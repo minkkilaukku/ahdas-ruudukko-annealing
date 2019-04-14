@@ -1,12 +1,12 @@
 class SimAnneal {
-    constructor(elClass, minE=0) {
+    constructor(elClass) {
         this.elClass = elClass;
         this.el = elClass.makeRand();
         this.prevE = this.el.getEnergy();
-        this.minE = minE;
         this.T = elClass.getStartT();
         this.iteration = 0;
         this.moves = 0;
+        this.stopCond = null;
         this.onStop = null;
     }
     
@@ -26,7 +26,7 @@ class SimAnneal {
             cb.onAccept();
             this.moves++;
             this.prevE = E;
-            if (E<=this.minE) {
+            if (typeof this.stopCond && this.stopCond()) {
                 if (typeof this.onStop === "function") {
                     this.onStop();
                 }

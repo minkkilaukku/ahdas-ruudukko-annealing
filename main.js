@@ -1,11 +1,15 @@
-
-Grid.setParams(10, 15, 100);
-Grid.CANVAS_CELL_W = 10;
-Grid.CANVAS_CELL_H = 10;
+let stopOnCells = 4*5; //amount of cells that's accepted as a optimal solution
+Grid.setParams(20);
+Grid.CANVAS_CELL_W = 20;
+Grid.CANVAS_CELL_H = 20;
 
 let tickWait = 0;
+let stepsPerTick = 10;
 
-const sa = new SimAnneal(Grid, 0);
+const sa = new SimAnneal(Grid);
+sa.stopCond = function() {
+    return this.el.m*this.el.n <= stopOnCells;
+};
 sa.onStop = () => {
     if (contAnneal) {
         stopAnneal();
@@ -48,7 +52,10 @@ const startAnneal = () => {
     onceButt.disabled = true;
     stopButt.disabled = false;
     const tick = () => {
-        step();
+        for (let i=0; i<stepsPerTick; i++) {
+            step();
+            if (!contAnneal) break;
+        }
         if (contAnneal) setTimeout(tick, tickWait);
     }
     setTimeout(tick, 0);
